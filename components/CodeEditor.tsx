@@ -3,6 +3,7 @@
 import CodeMirror from '@uiw/react-codemirror'
 import {vscodeLight} from "@uiw/codemirror-theme-vscode"
 import {javascript} from "@codemirror/lang-javascript"
+import { Play } from 'lucide-react'
 
 interface CodeEditorProps {
   code: string

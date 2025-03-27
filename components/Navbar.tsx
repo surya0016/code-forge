@@ -1,8 +1,13 @@
 import Link from "next/link"
 import { Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { auth } from "@clerk/nextjs/server"
+import { SignIn, SignInButton, SignUpButton, UserButton, UserProfile } from "@clerk/nextjs"
 
-export default function Navbar() {
+
+export default async function Navbar() {
+const {userId} = await auth()
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -14,7 +19,7 @@ export default function Navbar() {
         </Link>
         <nav className="hidden md:flex gap-6">
           <Link
-            href="/problems"
+            href="/problemss"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Problems
@@ -26,7 +31,7 @@ export default function Navbar() {
             Discuss
           </Link>
           <Link
-            href="/learn"
+            href="/learn-algorithm"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Learn
@@ -39,13 +44,13 @@ export default function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Login
-          </Link>
-          <Button>Sign Up</Button>
+          {userId ? <><UserButton/></> : <span>
+            <span className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <SignInButton/>
+            </span>
+            <Button><SignUpButton/></Button>
+          </span> }
+          
         </div>
       </div>
     </header>

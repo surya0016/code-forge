@@ -9,43 +9,73 @@ import CodeEditor from "@/components/CodeEditor"
 import TestCases from "@/components/TestCases"
 import { sampleProblem, type TestCase } from "@/lib/sample-data"
 import { toast } from "sonner"
+import { Problem, Submission } from "@prisma/client"
+import TestCaseSection from "@/components/test-case"
+import { CloudUpload, CloudUploadIcon, Code, Play } from "lucide-react"
+import { Button } from "./ui/button"
+import Link from "next/link"
+import axios from "axios"
+import { UserButton } from "@clerk/nextjs"
+import { redirect } from "next/navigation"
 
-export default function ProblemSolvingPlatform() {
+
+export default function ProblemSolvingPlatform({problem}:{problem:Problem}) {
   // const { toast } = useToast()
-  const [code, setCode] = useState("")
   const [language, setLanguage] = useState("python")
   const [testCases, setTestCases] = useState<TestCase[]>(sampleProblem.testCases)
+  const [results, setResults] = useState<Submission[]>([]);
+  const [code, setCode] = useState(problem.starterCode);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const runCode = () => {
-    // Simulate code execution
-    const updatedTestCases = testCases.map((testCase) => {
-      // In a real app, this would execute the code against the test case
-      const passed = Math.random() > 0.3 // Randomly pass or fail for demo
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    console.log(code)
+    try {
+      const response = await axios.post('/api/execute', {
+        code,
+        language: 'javascript',
+        problemId: problem.id, // Ensure problemId is included
+      });
+      console.log(response)
 
-      return {
-        ...testCase,
-        status: passed ? "pass" : "fail",
-        actualOutput: passed ? testCase.expectedOutput : "Unexpected output",
-        executionTime: Math.floor(Math.random() * 100) + "ms",
-        memoryUsage: Math.floor(Math.random() * 10) + "MB",
+      if (response.status === 200) {
+        console.log(response)
+        setResults(response.data.submission);
+      } else {
+        throw new Error('Unexpected response from server');
       }
-    })
-// @ts-ignore
-    setTestCases(updatedTestCases)
-
-    const passedCount = updatedTestCases.filter((tc) => tc.status === "pass").length
-
-    toast(`Execution complete`, {
-      description: `${passedCount}/${updatedTestCases.length} test cases passed`,
-      // variant: passedCount === updatedTestCases.length ? "default" : "destructive",
-    })
-  }
+    } catch (error: any) {
+      console.error('Error executing code:', error);
+      setError('Failed to execute code');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="h-screen w-full overflow-hidden">
+      <div className="flex justify-between px-4 py-3 border">
+        <div className="flex justify-center items-center">
+        <Link href={"/"}>
+          <div className="flex items-center justify-center gap-2 cursor-pointer">
+            <Code className="h-6 w-6" />
+            <span className="text-xl font-bold" onClick={redirect("/")}>CodeForge</span>
+          </div>
+        </Link>
+        </div>
+        <div className="flex">
+          <Button disabled={loading} onClick={()=>handleSubmit()} className="rounded-r-none border-r"><Play/>Run</Button>
+          <Button className="rounded-l-none"><CloudUploadIcon/>Submit</Button>
+        </div>
+        <div className="">
+          <span className=""><UserButton/></span>
+        </div>
+      </div>
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={40} minSize={30}>
-          <ProblemDescription problem={sampleProblem} />
+          <ProblemDescription problem={problem} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
@@ -53,13 +83,16 @@ export default function ProblemSolvingPlatform() {
         <ResizablePanel defaultSize={60} minSize={30}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={60} minSize={30}>
-              <CodeEditor code={code} setCode={setCode} language={language} setLanguage={setLanguage} onRun={runCode} />
+              <div>
+
+                <CodeEditor code={code} onChange={(value) => setCode(value)} />
+              </div>
             </ResizablePanel>
 
             <ResizableHandle withHandle />
 
             <ResizablePanel defaultSize={40} minSize={20}>
-              <TestCases testCases={testCases} />
+              <TestCaseSection/>
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

@@ -17,10 +17,10 @@ export function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild variant="secondary" size="lg">
-              <Link href="/problems">Start Coding</Link>
+              <Link href="/problemss">Start Coding</Link>
             </Button>
             <Button asChild size="lg">
-              <Link href="/learn">Learn Algorithms</Link>
+              <Link href="/learn-algorithm">Learn Algorithms</Link>
             </Button>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function HomePage() {
                   <h3 className="text-lg font-semibold mb-2">{category.name}</h3>
                   <p className="text-muted-foreground mb-4">{category.count} problems</p>
                   <Button variant="ghost" asChild>
-                    <Link href={`/problems?category=${category.name.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <Link href={`/problemss`}>
                       Explore →
                     </Link>
                   </Button>

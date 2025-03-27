@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { Problem } from "@/lib/sample-data"
+import TestDescription from "./TestDescription"
+import { Problem } from "@prisma/client"
 
 interface ProblemDescriptionProps {
   problem: Problem
@@ -11,7 +12,7 @@ interface ProblemDescriptionProps {
 export default function ProblemDescription({ problem }: ProblemDescriptionProps) {
   return (
     <div className="h-full overflow-y-auto p-4">
-      <Card className="h-full">
+      <Card className="h-full overflow-auto">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-2xl">{problem.title}</CardTitle>
@@ -26,17 +27,6 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="secondary">{problem.category}</Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Problem category</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
           </div>
           <CardDescription>Problem #{problem.id}</CardDescription>
@@ -44,10 +34,10 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
         <CardContent>
           <div className="space-y-6">
             <div className="prose dark:prose-invert max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: problem.description }} />
+              <div dangerouslySetInnerHTML={{__html:problem.description}} />
             </div>
 
-            <Accordion type="single" collapsible defaultValue="constraints">
+            {/* <Accordion type="single" collapsible defaultValue="constraints">
               <AccordionItem value="constraints">
                 <AccordionTrigger>Constraints</AccordionTrigger>
                 <AccordionContent>
@@ -95,7 +85,7 @@ export default function ProblemDescription({ problem }: ProblemDescriptionProps)
                   </ul>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion> */}
           </div>
         </CardContent>
       </Card>

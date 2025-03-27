@@ -14,9 +14,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress"
 import Navbar from "@/components/Navbar"
-import ProblemTable from "./components/ProblemTable"
 
-export default function ProblemList() {
+export default function ProblemList({children}:{children: React.ReactNode}) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "All">("All")
   const [selectedTag, setSelectedTag] = useState<string | "All">("All")
@@ -157,79 +156,7 @@ export default function ProblemList() {
               </div>
 
               <div className="rounded-md border">
-                {/* <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[50px]">Status</TableHead>
-                      <TableHead className="cursor-pointer" onClick={() => handleSort("title")}>
-                        Title{" "}
-                        {sortColumn === "title" &&
-                          (sortDirection === "asc" ? (
-                            <ChevronUp className="inline h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="inline h-4 w-4" />
-                          ))}
-                      </TableHead>
-                      <TableHead className="cursor-pointer" onClick={() => handleSort("difficulty")}>
-                        Difficulty{" "}
-                        {sortColumn === "difficulty" &&
-                          (sortDirection === "asc" ? (
-                            <ChevronUp className="inline h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="inline h-4 w-4" />
-                          ))}
-                      </TableHead>
-                      <TableHead className="cursor-pointer" onClick={() => handleSort("acceptanceRate")}>
-                        Acceptance{" "}
-                        {sortColumn === "acceptanceRate" &&
-                          (sortDirection === "asc" ? (
-                            <ChevronUp className="inline h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="inline h-4 w-4" />
-                          ))}
-                      </TableHead>
-                      <TableHead>Tags</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredAndSortedProblems.map((problem) => (
-                      <TableRow key={problem.id}>
-                        <TableCell>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger>
-                                {problem.isSolved ? (
-                                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                                ) : (
-                                  <Circle className="h-5 w-5 text-muted-foreground" />
-                                )}
-                              </TooltipTrigger>
-                              <TooltipContent>{problem.isSolved ? "Solved" : "Not solved yet"}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </TableCell>
-                        <TableCell>
-                          <Link href={`/problem/${problem.id}`} className="font-medium hover:underline">
-                            {problem.id}. {problem.title}
-                          </Link>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={`${getDifficultyVariant(problem.difficulty)}`}>{problem.difficulty}</Badge>
-                        </TableCell>
-                        <TableCell>{problem.acceptanceRate.toFixed(1)}%</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {problem.tags.map((tag) => (
-                              <Badge key={tag} variant="outline" className="text-xs">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table> */}
+                {children}
               </div>
 
               {filteredAndSortedProblems.length === 0 && (

@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, XCircle, Eye, EyeOff, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 // Types based on the Prisma schema
 type TestCase = {
@@ -35,9 +34,6 @@ export default function TestCaseSection() {
   // Sample data - in a real app, this would come from your database
   const [testCases, setTestCases] = useState<TestCase[]>([
     { id: "1", input: "nums = [2,7,11,15], target = 9", output: "[0,1]", isHidden: false },
-    { id: "2", input: "nums = [3,2,4], target = 6", output: "[1,2]", isHidden: false },
-    { id: "3", input: "nums = [3,3], target = 6", output: "[0,1]", isHidden: false },
-    { id: "4", input: "nums = [1,5,8,10], target = 18", output: "[2,3]", isHidden: true },
   ])
 
   const [submission, setSubmission] = useState<Submission>({
@@ -48,14 +44,11 @@ export default function TestCaseSection() {
     runtime: 76,
     testCaseResults: [
       { testCaseId: "1", actualOutput: "[0,1]", passed: true },
-      { testCaseId: "2", actualOutput: "[1,2]", passed: true },
-      { testCaseId: "3", actualOutput: "[0,1]", passed: true },
-      { testCaseId: "4", actualOutput: "[2,3]", passed: true },
     ],
   })
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full mt-4 max-w-4xl mx-auto">
       <Tabs defaultValue="test-cases" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="test-cases">Test Cases</TabsTrigger>
@@ -63,46 +56,19 @@ export default function TestCaseSection() {
         </TabsList>
 
         <TabsContent value="test-cases">
-          <Tabs>
-            <TabsList>
-              {testCases.map((testCase)=>(
-                <TabsTrigger key={testCase.id} value={`test-case-${testCase.id}`} className="mr-1 mb-1">
-                  Test Case {testCase.id}            
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {testCases.map((testCase)=>(
-              <TabsContent value="data" className="mt-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-1/2">Input</TableHead>
-                    <TableHead className="w-1/2">Expected Output</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="align-top">
-                      <pre className="bg-muted p-2 rounded text-sm overflow-x-auto">{testCase.input}</pre>
-                    </TableCell>
-                    <TableCell className="align-top">
-                      {testCase.isHidden ? (
-                        <div className="flex items-center justify-center h-20 bg-muted rounded p-2">
-                          <p className="text-sm text-muted-foreground">Output hidden for this test case</p>
-                        </div>
-                      ) : (
-                        <pre className="bg-muted p-2 rounded text-sm overflow-x-auto">
-                          {testCase.output}
-                        </pre>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TabsContent>
-            ))}
-          </Tabs>
-          
+          <Card>
+            <CardHeader>
+              <CardTitle>Test Cases</CardTitle>
+              <CardDescription>Input and expected output for each test case</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {testCases.map((testCase) => (
+                  <TestCaseItem key={testCase.id} testCase={testCase} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="test-results">
